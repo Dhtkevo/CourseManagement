@@ -20,11 +20,22 @@ namespace CourseManagement.Controllers
         }
 
         // GET: Courses
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-              return _context.Course != null ? 
-                          View(await _context.Course.ToListAsync()) :
-                          Problem("Entity set 'CourseManagementContext.Course'  is null.");
+            if (_context.Course == null)
+            {
+                return Problem("Entity set 'CourseManagementContext.Movie'  is null.");
+            }
+
+            var courses = from m in _context.Course
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                courses = courses.Where(s => s.Name!.Contains(searchString));
+            }
+
+            return View(await courses.ToListAsync());
         }
 
         // GET: Courses/Details/5
