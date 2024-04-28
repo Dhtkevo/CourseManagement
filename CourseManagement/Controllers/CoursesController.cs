@@ -20,22 +20,37 @@ namespace CourseManagement.Controllers
         }
 
         // GET: Courses
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string courseSubject, string searchString)
         {
             if (_context.Course == null)
             {
                 return Problem("Entity set 'CourseManagementContext.Movie'  is null.");
             }
 
-            var courses = from m in _context.Course
-                         select m;
+            // Use LINQ to get list of subjects.
+            IQueryable<string> subjectQuery = from m in _context.Course
+                                            orderby m.Subject
+                                            select m.Subject;
+            var courses = from c in _context.Course
+                         select c;
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
                 courses = courses.Where(s => s.Name!.Contains(searchString));
             }
 
-            return View(await courses.ToListAsync());
+            if (!string.IsNullOrEmpty(courseSubject))
+            {
+                courses = courses.Where(x => x.Subject == courseSubject);
+            }
+
+            var courseSubjectVM = new CourseSubjectViewModel
+            {
+                Subjects = new SelectList(await subjectQuery.Distinct().ToListAsync()),
+                Courses = await courses.ToListAsync()
+            };
+
+            return View(courseSubjectVM);
         }
 
         // GET: Courses/Details/5
