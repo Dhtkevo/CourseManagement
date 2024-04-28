@@ -1,6 +1,7 @@
-using CourseManagement.Data;
+﻿using CourseManagement.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseManagement
 {
@@ -9,6 +10,8 @@ namespace CourseManagement
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<CourseManagementContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("CourseManagementContext") ?? throw new InvalidOperationException("Connection string 'CourseManagementContext' not found.")));
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
