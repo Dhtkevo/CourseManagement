@@ -1,6 +1,7 @@
 ﻿using CourseManagement.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using CourseManagement.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseManagement
@@ -24,6 +25,13 @@ namespace CourseManagement
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                SeedData.Initialize(services);
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
