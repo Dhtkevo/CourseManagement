@@ -14,6 +14,11 @@ namespace CourseManagement.Data
         {
         }
 
-        public DbSet<CourseManagement.Models.Course> Course { get; set; } = default!;
+        public CourseManagementContext()
+        {
+
+        }
+
+        public virtual DbSet<CourseManagement.Models.Course> Course { get; set; } = default!;
     }
 }
