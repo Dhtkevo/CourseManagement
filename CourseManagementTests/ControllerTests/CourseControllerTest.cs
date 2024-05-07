@@ -43,9 +43,11 @@ namespace CourseManagementTests.ControllerTests
 
             var courseController = new CoursesController(dbMock.Object);
             var courseID = 1;
+            var searchString = "Biology";
+            var searchSubject = "Science";
 
             // Act
-            var result = (await courseController.Details(courseID));
+            var result = (await courseController.Index(searchString, searchSubject));
 
             // Assert
             Assert.IsType<ViewResult>(result);
